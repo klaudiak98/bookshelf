@@ -1,13 +1,13 @@
 import './App.css';
 import { Route, Routes } from 'react-router';
 import { Card } from 'react-bootstrap';
-import Home from './component/Home';
-import Login from './component/Login';
-import Register from './component/Register';
-import Profile from './component/Profile';
-import Settings from './component/Settings';
-import NotFound from './component/NotFound';
-import Navbar from './component/Navbar';
+import Home from './components/Home';
+import Login from './components/Login';
+import Register from './components/Register';
+import Profile from './components/Profile';
+import Settings from './components/Settings';
+import NotFound from './components/NotFound';
+import Navbar from './components/Navbar';
 
 const App = () => {
 

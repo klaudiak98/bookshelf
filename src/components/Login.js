@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Form, FloatingLabel } from 'react-bootstrap';
+import { Form, FloatingLabel } from 'react-bootstrap';
+import Button from "./Button";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -21,8 +22,8 @@ const Login = () => {
     }
 
     return (
-        <div className="d-flex flex-column">
-            <h1 className="align-self-center">Login</h1>
+        <div className="form">
+            <h1>Login</h1>
 
              <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formEmail">
@@ -45,9 +46,7 @@ const Login = () => {
                     </FloatingLabel>
                 </Form.Group>
 
-                <Button variant="success" type="submit">
-                    Submit
-                </Button>
+                <Button text='Login' type='submit'/>
 
              </Form>
             
