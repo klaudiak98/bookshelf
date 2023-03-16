@@ -1,89 +1,151 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Form, FloatingLabel } from 'react-bootstrap';
 import Button from "./Button";
+import axios from '../api/axios';
 
 const Register = () => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [repassword, setRepassword] = useState('');
     const [name, setName] = useState('');
 
-    const handleEmailChange = (e) => {
-        e.preventDefault();
-        setEmail(e.target.value);
-    };
+    const [password, setPassword] = useState('');
+    const [validPassword, setValidPassword] = useState(false);
 
-    const handlePasswordChange = (e) => {
-        e.preventDefault();
-        setPassword(e.target.value);
-    };
+    const [matchPassword, setMatchPassword] = useState('');
+    const [validMatchPassword, setValidMatchPassword] = useState(false);
 
-    const handleRepasswordChange = (e) => {
-        e.preventDefault();
-        setRepassword(e.target.value);
-    };
+    const [errMsg, setErrMsg] = useState('');
+    const [success, setSuccess] = useState('');
 
-    const handleNameChange = (e) => {
-        e.preventDefault();
-        setName(e.target.value);
-    };
+    const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+    const REGISTER_URL = "/register";
+    
+    useEffect(() => {
+        const result = PWD_REGEX.test(password);
+        setValidPassword(result);
+        const match = password === matchPassword;
+        setValidMatchPassword(match);
+    }, [password, matchPassword]);
 
-    const handleSubmit = () =>  {
-        console.log('email: ', email,' password: ',password, ' pass again: ', repassword, 'name: ', name)
+    useEffect(() => {
+        setErrMsg('');
+    }, [email, password, matchPassword]);
+
+
+    const handleSubmit = async(e) =>  {
+        e.preventDefault();
+        console.log('test')
+        try {
+            const response = await axios.post(
+                REGISTER_URL,
+                JSON.stringify({
+                    email,
+                    password,
+                    name
+                }),
+                {
+                    headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
+                }
+            );
+            setSuccess(true);
+        } catch (err) { 
+            if (!err?.response) {
+                setErrMsg('No Server Response');
+            } else if (err.response?.status === 409) {
+                setErrMsg(`Account ${email} already exists`);
+            } else {
+                setErrMsg('Registration faild');
+            }
+        }
     }
 
     return (
-        <div className="form">
+        <>
+        { success ? (
+            <section>
+                <h1>success</h1>
+                <Link to="/login"><p>login</p></Link>
+            </section>
+        ) : 
+        (  
+        <section className="form">
             <h1>Create new account</h1>
+            <p className={errMsg}>{errMsg}</p>
 
              <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formEmail">
                     <FloatingLabel
-                        controlId="floatingEmailInput"
-                        label="Email address"
+                        label="email"
                         className="mb-3"
+                        controlId="email"
                     >
-                        <Form.Control type="email" placeholder="name@example.com" onChange={handleEmailChange}/>
+                        <Form.Control 
+                            type="email" 
+                            onChange={(e) => setEmail(e.target.value)} 
+                            required
+                            placeholder="email"
+                        />
                     </FloatingLabel>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formPassword">
                     <FloatingLabel
-                        controlId="floatingPasswordInput"
-                        label="New password"
+                        label="password"
                         className="mb-3"
+                        controlId="password"
                     >
-                        <Form.Control type="password" placeholder="password" onChange={handlePasswordChange}/>
+                        <Form.Control 
+                            type="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            placeholder="password"
+                        />
                     </FloatingLabel>
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formPasswordAgain">
+                <Form.Group className="mb-3" controlId="formMatchPassword">
                     <FloatingLabel
-                        controlId="floatingPasswordAgainInput"
-                        label="New password again"
+                        label="password again"
                         className="mb-3"
+                        controlId="matchPassword"
                     >
-                        <Form.Control type="password" placeholder="password again" onChange={handleRepasswordChange}/>
+                        <Form.Control 
+                            type="password" 
+                            onChange={(e) => setMatchPassword(e.target.value)}
+                            required
+                            placeholder="password again"
+                        />
                     </FloatingLabel>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formName">
                     <FloatingLabel
-                        controlId="floatingNameInput"
-                        label="Your name"
+                        label="name"
                         className="mb-3"
+                        controlId="name"
                     >
-                        <Form.Control type="text" placeholder="name" onChange={handleNameChange}/>
+                        <Form.Control 
+                            type="text" 
+                            required
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="name"
+                        />
                     </FloatingLabel>
                 </Form.Group>
 
-                <Button text='Register' type='submit'/>
+                <Button 
+                    text='Register' 
+                    type='submit'
+                    disabled={!name || !validPassword || !validMatchPassword}
+                />
 
              </Form>
             
             <Link to="/login"><p>or login</p></Link>
-        </div>
+        </section>
+    )}
+    </>
     )
 }
 

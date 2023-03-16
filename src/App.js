@@ -11,9 +11,11 @@ import Navbar from './components/Navbar';
 
 const App = () => {
 
+  const isLogged = false;
+
   return (
     <>
-      <Navbar/>
+      <Navbar isLogged={isLogged}/>
 
       <Card body className='mx-5 bg-light'>
         <Routes>

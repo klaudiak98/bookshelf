@@ -67,3 +67,15 @@ a {
 .book img {
   max-height: 10em;
 }
+
+section {
+  margin-bottom: 1.2em;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+.errMsg {
+  font-weight: bold;
+}
