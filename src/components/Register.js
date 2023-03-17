@@ -49,6 +49,10 @@ const Register = () => {
                 }
             );
             setSuccess(true);
+            setEmail('');
+            setPassword('');
+            setMatchPassword('');
+            setName('');
         } catch (err) { 
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -58,6 +62,8 @@ const Register = () => {
                 setErrMsg('Registration faild');
             }
         }
+        setValidMatchPassword(false);
+        setValidPassword(false);
     }
 
     return (
@@ -71,7 +77,7 @@ const Register = () => {
         (  
         <section className="form">
             <h1>Create new account</h1>
-            <p className={errMsg}>{errMsg}</p>
+            <p className='errMsg'>{errMsg}</p>
 
              <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formEmail">
@@ -85,6 +91,7 @@ const Register = () => {
                             onChange={(e) => setEmail(e.target.value)} 
                             required
                             placeholder="email"
+                            value={email}
                         />
                     </FloatingLabel>
                 </Form.Group>
@@ -100,6 +107,7 @@ const Register = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                             placeholder="password"
+                            value={password}
                         />
                     </FloatingLabel>
                 </Form.Group>
@@ -115,6 +123,7 @@ const Register = () => {
                             onChange={(e) => setMatchPassword(e.target.value)}
                             required
                             placeholder="password again"
+                            value={matchPassword}
                         />
                     </FloatingLabel>
                 </Form.Group>
@@ -130,6 +139,7 @@ const Register = () => {
                             required
                             onChange={(e) => setName(e.target.value)}
                             placeholder="name"
+                            value={name}
                         />
                     </FloatingLabel>
                 </Form.Group>

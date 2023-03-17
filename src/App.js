@@ -6,25 +6,39 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
+import Admin from './components/Admin';
 import NotFound from './components/NotFound';
 import Navbar from './components/Navbar';
+import RequireAuth from './components/RequireAuth';
 
 const App = () => {
 
-  const isLogged = false;
+  const ROLES = {
+    "User": 100,
+    "Admin":777
+  }
 
   return (
     <>
-      <Navbar isLogged={isLogged}/>
+      <Navbar/>
 
       <Card body className='mx-5 bg-light'>
         <Routes>
-          <Route path="/" element={<Home/>}></Route>
           <Route path="/login" element={<Login/>}></Route>
           <Route path="/register" element={<Register/>}></Route>
-          <Route path="/profile" element={<Profile/>}></Route>
-          <Route path="/settings" element={<Settings/>}></Route>
+
+          <Route element={<RequireAuth allowedRoles={[ROLES.User]}/>}>
+            <Route path="/" element={<Home/>}></Route>
+            <Route path="/profile" element={<Profile/>}></Route>
+            <Route path="/settings" element={<Settings/>}></Route>
+          </Route>
+
+          <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>}>
+            <Route path="/admin" element={<Admin/>}></Route>
+          </Route>
+
           <Route path='*' element={<NotFound/>}></Route>
+
         </Routes>
       </Card>
     </>
