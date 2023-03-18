@@ -10,6 +10,7 @@ import Admin from './components/Admin';
 import NotFound from './components/NotFound';
 import Navbar from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
+import PersistLogin from './components/PersistLogin';
 
 const App = () => {
 
@@ -27,14 +28,16 @@ const App = () => {
           <Route path="/login" element={<Login/>}></Route>
           <Route path="/register" element={<Register/>}></Route>
 
-          <Route element={<RequireAuth allowedRoles={[ROLES.User]}/>}>
-            <Route path="/" element={<Home/>}></Route>
-            <Route path="/profile" element={<Profile/>}></Route>
-            <Route path="/settings" element={<Settings/>}></Route>
-          </Route>
+          <Route element={<PersistLogin/>}>
+            <Route element={<RequireAuth allowedRoles={[ROLES.User]}/>}>
+              <Route path="/" element={<Home/>}></Route>
+              <Route path="/profile" element={<Profile/>}></Route>
+              <Route path="/settings" element={<Settings/>}></Route>
+            </Route>
 
-          <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>}>
-            <Route path="/admin" element={<Admin/>}></Route>
+            <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>}>
+              <Route path="/admin" element={<Admin/>}></Route>
+            </Route>
           </Route>
 
           <Route path='*' element={<NotFound/>}></Route>
