@@ -1,19 +1,38 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BooksList from "./BooksList";
 import {FaRegWindowClose}from "react-icons/fa" 
 import {FaCogs} from "react-icons/fa"
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import useLogout from '../hooks/useLogout';
 
 const Profile = () => {
 
     const navigate = useNavigate();
     const logout = useLogout();
+    const controller = new AbortController();
+    const axiosPrivate = useAxiosPrivate();
+    const [user, setUser] = useState({});
 
     const signOut = async () => {
         await logout();
         navigate('/login');
     }
+
+    useEffect(()=> {
+      const getUser = async () => {
+        try {
+        const response = await axiosPrivate.get('/users/me', {
+          signal: controller.signal
+        });
+
+        setUser(response.data)
+      } catch (err) {
+        console.error(err)
+      }}
+
+      getUser()
+    },[])
 
     const [wantToReadBooks, setWantToReadBooks] = useState([
         {
@@ -39,9 +58,9 @@ const Profile = () => {
     return (
         <>
             <header style={{display: "flex", justifyContent: "space-between"}}>
-                <h1>Hi Klaudia</h1>
+                <h1>Hi {user?.name}</h1>
                 <div style={{fontSize: "2em", paddingRight: "0.5em"}}>
-                    <Link to="/settings"><FaCogs style={{marginRight: "0.5em"}} color={"black"}/></Link>
+                    <Link to="/settings" state={{user: user}}><FaCogs style={{marginRight: "0.5em"}} color={"black"}/></Link>
                     <button onClick={signOut}><FaRegWindowClose color={"black"}/></button>
                 </div>
             </header>
@@ -57,6 +76,7 @@ const Profile = () => {
                 <h3>Read</h3>
                 <BooksList books={wantToReadBooks}/>
             </section>
+            
         </>
     )
 }

@@ -15,7 +15,6 @@ const Register = () => {
     const [validMatchPassword, setValidMatchPassword] = useState(false);
 
     const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState('');
 
     const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
     const REGISTER_URL = "/register";
@@ -31,10 +30,8 @@ const Register = () => {
         setErrMsg('');
     }, [email, password, matchPassword]);
 
-
     const handleSubmit = async(e) =>  {
         e.preventDefault();
-        console.log('test')
         try {
             const response = await axios.post(
                 REGISTER_URL,
@@ -48,7 +45,6 @@ const Register = () => {
                     withCredentials: true
                 }
             );
-            setSuccess(true);
             setEmail('');
             setPassword('');
             setMatchPassword('');
@@ -67,14 +63,6 @@ const Register = () => {
     }
 
     return (
-        <>
-        { success ? (
-            <section>
-                <h1>success</h1>
-                <Link to="/login"><p>login</p></Link>
-            </section>
-        ) : 
-        (  
         <section className="form">
             <h1>Create new account</h1>
             <p className='errMsg'>{errMsg}</p>
@@ -155,8 +143,5 @@ const Register = () => {
             <Link to="/login"><p>or login</p></Link>
         </section>
     )}
-    </>
-    )
-}
 
 export default Register;

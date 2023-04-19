@@ -50,21 +50,21 @@ a {
   align-self: center;
 }
 
-.bookList {
+.list {
   display: flex;
   flex-direction: column;
   padding: 0.5em;
   gap: 0.5em;
 }
 
-.book {
+.item {
   padding: 0.7em;
   border-radius: 0.5em;
   background-color: #e0e0e0;
   gap: 1.5em;
 }
 
-.book img {
+.item img {
   max-height: 10em;
 }
 

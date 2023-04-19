@@ -9,7 +9,7 @@ const Book = ({book}) => {
     const isLogged = true;
 
     return (
-    <div className="book d-flex">
+    <div className="item d-flex">
         {/* <h1>Book {id}</h1> */}
         {/* <p>{obj.hello}</p> */}
 
