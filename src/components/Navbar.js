@@ -1,20 +1,57 @@
 import { Link } from "react-router-dom"
 import Logo from '../logo.svg'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Form } from "react-bootstrap"
 import { FaUser } from "react-icons/fa"
+import axios from "axios"
+
+const GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes?q=';
 
 const Navbar = () => {
     const [searchInput, setSearchInput] = useState('');
+    const [books, setBooks] = useState([]);
+
     const handleChange = (e) => {
         e.preventDefault();
         setSearchInput(e.target.value);
     };
 
+    const showBook = (bookID) => {
+      console.log('id', bookID)
+    }
+
+    useEffect(()=> {
+      const getBook = async() => {
+        const search = searchInput.replace(/\s+/g, '_')
+        const response = await axios.get(`${GOOGLE_BOOKS_API}${search}`);
+        setBooks(response.data?.items);
+      }
+
+      searchInput.length ? getBook() : setBooks([]);
+    },[searchInput])
+
   return (
     <nav className="navbar">
         <Link to="/"><img src={Logo} alt="Logo" height="90px"/></Link>
-        <Form.Control type="text" placeholder="Search book" value={searchInput} onChange={handleChange} style={{'width': '20em'}}/>
+        <div>
+          <Form.Control type="text" placeholder="Search book" value={searchInput} onChange={handleChange} style={{'width': '20em'}}/>
+          <div style={{'position': 'absolute', 'top':'3.5em', 'zIndex':'100'}}>
+            {
+              books?.map(book => {
+                return(
+                <div key={book?.id} className="box" onClick={()=>showBook(book?.id)}>
+                  <p className="title">{book?.volumeInfo?.title}</p>
+                  {
+                    book?.volumeInfo?.authors ?
+                      <p className="author">{book?.volumeInfo?.authors}</p> : 
+                      ''
+                  }
+                </div>)
+              })
+            }
+          </div>
+        </div>
+        
         <Link to={"/profile"}><FaUser color="black"/></Link>
     </nav>
   )

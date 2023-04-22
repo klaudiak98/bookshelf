@@ -79,3 +79,32 @@ h1 {
 .errMsg {
   font-weight: bold;
 }
+
+.box {
+  text-align: left;
+  border: black ridge 1px;
+  border-radius: 0.375rem;
+  margin: 2px;
+  width: 20rem;
+  padding-left: 5px;
+  background-color: #ffffffde;
+  cursor: pointer;
+}
+
+.box:active,
+.box:focus,
+.box:hover {
+  background-color: #abababcf;
+  box-shadow: 0 0 5px -1px rgba(0, 0, 0, 0.6);
+}
+
+.title {
+  font-weight: bold;
+  font-size: medium;
+  margin-bottom: 1px;
+}
+
+.author {
+  font-size: small;
+  margin-bottom: 1px;
+}
