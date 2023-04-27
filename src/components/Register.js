@@ -49,6 +49,7 @@ const Register = () => {
             setPassword('');
             setMatchPassword('');
             setName('');
+            alert('New account has been created')
         } catch (err) { 
             if (!err?.response) {
                 setErrMsg('No Server Response');

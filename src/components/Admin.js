@@ -20,9 +20,11 @@ const Admin = () => {
         });
 
         const newUsersArray = users.filter(u => u.email !== email)
-        setUsers(newUsersArray)
+        setUsers(newUsersArray);
+        alert('The user has been deleted');
       } catch (err) {
         console.error(err)
+        alert('Something went wrong');
       }
   }
 

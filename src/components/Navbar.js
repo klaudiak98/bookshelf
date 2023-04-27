@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import Logo from '../logo.svg'
 import { useEffect, useState } from "react"
 import { Form } from "react-bootstrap"
-import { FaUser } from "react-icons/fa"
+import { FaCogs } from "react-icons/fa"
 import axios from "axios"
 
 const GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -15,10 +15,6 @@ const Navbar = () => {
         e.preventDefault();
         setSearchInput(e.target.value);
     };
-
-    const showBook = (bookID) => {
-      console.log('id', bookID)
-    }
 
     useEffect(()=> {
       const getBook = async() => {
@@ -39,20 +35,22 @@ const Navbar = () => {
             {
               books?.map(book => {
                 return(
-                <div key={book?.id} className="box" onClick={()=>showBook(book?.id)}>
-                  <p className="title">{book?.volumeInfo?.title}</p>
-                  {
-                    book?.volumeInfo?.authors ?
-                      <p className="author">{book?.volumeInfo?.authors}</p> : 
-                      ''
-                  }
-                </div>)
+                  <div className="box" key={book?.id}>
+                    <Link to={`/book/${book?.id}`} style={{'color': 'black'}} onClick={()=>setSearchInput('')}>
+                      <p className="title">{book?.volumeInfo?.title}</p>
+                      {
+                        book?.volumeInfo?.authors ?
+                          <p className="author">{book?.volumeInfo?.authors}</p> : 
+                          ''
+                      }
+                    </Link>
+                  </div>
+                )
               })
             }
           </div>
         </div>
-        
-        <Link to={"/profile"}><FaUser color="black"/></Link>
+        <Link to={"/settings"}><FaCogs color={"black"} size={'2em'} /></Link>
     </nav>
   )
 }

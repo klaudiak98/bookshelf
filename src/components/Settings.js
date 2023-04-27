@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom"
 import { FaRegWindowClose } from "react-icons/fa"
 import { Form, FloatingLabel } from 'react-bootstrap';
 import Button from "./Button";
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { useNavigate } from "react-router-dom"
+import useLogout from '../hooks/useLogout';
 
 const Settings = () => {
 
-    const location = useLocation()
-    const { user } = location?.state
     const axiosPrivate = useAxiosPrivate();
+    const [user, setUser] = useState({});
+    const navigate = useNavigate();
+    const logout = useLogout();
 
     const [name, setName] = useState(user.name);
     const [password, setPassword] = useState('');
@@ -33,13 +35,28 @@ const Settings = () => {
         setErrMsg('');
     }, [name, password, matchPassword]);
 
+    useEffect(()=> {
+        const controller = new AbortController();
+        const getUser = async () => {
+            try {
+                const response = await axiosPrivate.get('/users/me', {
+                signal: controller.signal
+                });
+
+                setUser(response.data)
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        getUser()
+    },[])
+
     const handleSubmit = async(e) =>  {
         const controller = new AbortController();
-
         e.preventDefault();
+
         if (validMatchPassword && name.length) 
         {
-            console.log(user, name, password)
             const email = user.email;
             try {
                 if (password.length) {
@@ -68,6 +85,7 @@ const Settings = () => {
                 }
                 setPassword('');
                 setMatchPassword('');
+                alert('Your account has been updated')
             } catch (err) { 
                 if (!err?.response) {
                     setErrMsg('No Server Response');
@@ -76,17 +94,22 @@ const Settings = () => {
         }
     }
 
-  return (
+    const signOut = async () => {
+        await logout();
+        navigate('/login');
+    }
+
+    return (
     <>
         <header style={{display: "flex", justifyContent: "space-between"}}>
-          <h1>Settings</h1>
-          <div style={{fontSize: "2em", paddingRight: "0.5em"}}>
-              <Link to="/profile"><FaRegWindowClose color={"black"}/></Link>
-          </div>
+            <h1>Settings</h1>
+            <div style={{fontSize: "2em", paddingRight: "0.5em"}}>
+                <button onClick={signOut} style={{'background':'none', 'border':'none'}}><FaRegWindowClose color={"black"}/></button>
+            </div>
         </header>
         <section className="form">
-          <p className='errMsg'>{errMsg}</p>
-         <Form>
+            <p className='errMsg'>{errMsg}</p>
+            <Form>
                 <Form.Group className="mb-3" controlId="formName">
                     <FloatingLabel
                         label="name"
@@ -139,7 +162,6 @@ const Settings = () => {
                 <Button 
                     text='Save' 
                     type='submit'
-                    // disabled={!name || !validPassword || !validMatchPassword}
                     onClick={handleSubmit}
                 />
 

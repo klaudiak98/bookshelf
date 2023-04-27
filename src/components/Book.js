@@ -1,26 +1,38 @@
-// import { useOutletContext, useParams } from "react-router";
 import { FaRegEdit } from  'react-icons/fa'
 import BookCoverPlaceholder from '../images/book-cover-placeholder.png';
+import { useEffect, useState } from 'react';
+import axios from "axios"
+import { Link } from 'react-router-dom';
 
-const Book = ({book}) => {
-    // const {id } = useParams()
-    // const obj = useOutletContext()
+const GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes/';
+const Book = ({bookId}) => {
 
-    const isLogged = true;
+    const [book, setBook] = useState({});
+
+    useEffect(() => {
+        const getBook = async () => {
+            const response = await axios.get(`${GOOGLE_BOOKS_API}${bookId}`);
+            setBook(response.data);
+        };
+        getBook();
+    },[bookId])
+
+    const desc = book?.volumeInfo?.description || 'Brak opisu';
 
     return (
-    <div className="item d-flex">
-        {/* <h1>Book {id}</h1> */}
-        {/* <p>{obj.hello}</p> */}
-
-        <div><img src={BookCoverPlaceholder} alt="Book cover placeholder"/></div>
-        <div>
-            <h4 style={{fontWeight: "bold", display: "flex", justifyContent: "space-between"}}>{book.title} {isLogged ? <FaRegEdit/> : ''}</h4>
-            <h5>{book.author}</h5>
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero qui totam vitae voluptatibus quam quas rerum exercitationem ut, minima necessitatibus.</p>
+    <div className="item d-flex" id={book?.id}>
+        <div><img src={book?.volumeInfo?.imageLinks?.thumbnail || BookCoverPlaceholder} alt="Book cover placeholder"/></div>
+        <div style={{'width': '100%'}}>
+            <h4 style={{fontWeight: "bold", display: "flex", justifyContent: "space-between"}}>
+                {book?.volumeInfo?.title} 
+                <Link to={`/book/${book?.id}`}><FaRegEdit/></Link>
+            </h4>
+            <h5 style={{'fontWeight':'bold'}}>{book?.volumeInfo?.subtitle}</h5>
+            <h5>{book?.voulumeInfo?.authors}</h5>
+            <p>{book?.volumeInfo?.publisher}, {book?.volumeInfo?.publishedDate}</p>
+            <br/>
+            <div className='truncateLongTexts'>{desc}</div>
         </div>
-
-        {/* <FaPlus style={{color: 'green', cursor: 'pointer'}}/> */}
     </div>
     )
 }

@@ -40,10 +40,9 @@ const Login = () => {
             const accessToken = response?.data?.accessToken;
             const roles = response?.data?.roles;
             setAuth({email, password, roles, accessToken});
-            console.log(response)
             setEmail('');
             setPassword('');
-            navigate(from, {replace: true});
+            navigate(from, {replace: true, state:{roles: roles}});
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');

@@ -11,6 +11,7 @@ import NotFound from './components/NotFound';
 import Navbar from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
 import PersistLogin from './components/PersistLogin';
+import BookPage from './components/BookPage';
 
 const App = () => {
 
@@ -33,6 +34,7 @@ const App = () => {
               <Route path="/" element={<Home/>}></Route>
               <Route path="/profile" element={<Profile/>}></Route>
               <Route path="/settings" element={<Settings/>}></Route>
+              <Route path="/book/:bookId" element={<BookPage/>}></Route>
             </Route>
 
             <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>}>
