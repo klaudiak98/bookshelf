@@ -14,6 +14,7 @@ import PersistLogin from './components/PersistLogin';
 import BookPage from './components/BookPage';
 
 const App = () => {
+  document.title = 'MasterThesisReact';
 
   const ROLES = {
     "User": 100,

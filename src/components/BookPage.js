@@ -113,16 +113,16 @@ const BookPage = () => {
         </div>
     </header>
 
-    <section style={{'paddingLeft': '2em', 'paddingRight': '2em'}}>
-        <div style={{'border':'1px solid #000', 'padding': '2em'}}>
+    <section style={{'paddingLeft': '2em', 'paddingRight': '2em', 'textAlign': 'center', 'marginBottom':'1.5em'}}>
+        <div style={{'border':'1px solid #000', 'padding': '2em', 'display':'inline-block'}}>
             <h3>Your shelves</h3>
-            <select value={bookState} onChange={(e) => setBookState(e.target.value)}>
+            <select value={bookState} onChange={(e) => setBookState(e.target.value)} className="mb-2">
                 <option disabled value="">-- Select --</option>
                 <option value="read">Read</option>
                 <option value="currentlyReading">Currenly reading</option>
                 <option value="wantToRead">Want to read</option>
             </select>
-            <div>
+            {/* <div>
                 { 
                     bookState === 'read' ?
                     (<div>
@@ -131,9 +131,9 @@ const BookPage = () => {
                     </div>) :
                     ''
                 }
-            </div>
+            </div> */}
             <br/>
-            <div className="d-flex flex-column gap-2">
+            <div className="d-flex flex-column gap-2 align-items-center">
                 <Button text='Save' onClick={handleSave}/>
                 <Button text='Remove from shelves' onClick={removeFromShelves} style={{'border-color':'red', 'background-color':'#ffa8a8'}}/>
             </div>

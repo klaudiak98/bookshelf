@@ -31,7 +31,7 @@ const Navbar = () => {
         <Link to="/"><img src={Logo} alt="Logo" height="90px"/></Link>
         <div>
           <Form.Control type="text" placeholder="Search book" value={searchInput} onChange={handleChange} style={{'width': '20em'}}/>
-          <div style={{'position': 'absolute', 'top':'3.5em', 'zIndex':'100'}}>
+          <div className="searchBarList">
             {
               books?.map(book => {
                 return(

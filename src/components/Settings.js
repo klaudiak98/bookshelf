@@ -101,8 +101,8 @@ const Settings = () => {
 
     return (
     <>
-        <header style={{display: "flex", justifyContent: "space-between"}}>
-            <h1>Settings</h1>
+        <header className="d-flex justify-content-between">
+            <h1>Settings</h1> b
             <div style={{fontSize: "2em", paddingRight: "0.5em"}}>
                 <button onClick={signOut} style={{'background':'none', 'border':'none'}}><FaRegWindowClose color={"black"}/></button>
             </div>
