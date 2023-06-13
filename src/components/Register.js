@@ -22,13 +22,16 @@ const Register = () => {
     useEffect(() => {
         const result = PWD_REGEX.test(password);
         setValidPassword(result);
+        (password && !result) ? setErrMsg('Password need to have 8 or more characters with a mix of letters numbers and symbols') : setErrMsg('');
         const match = password === matchPassword;
         setValidMatchPassword(match);
+        if (matchPassword) {
+            !match ?
+                setErrMsg('Passwords do not match')
+                :
+                setErrMsg('')
+        }
     }, [password, matchPassword]);
-
-    useEffect(() => {
-        setErrMsg('');
-    }, [email, password, matchPassword]);
 
     const handleSubmit = async(e) =>  {
         e.preventDefault();

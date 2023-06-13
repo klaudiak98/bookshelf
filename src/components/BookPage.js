@@ -12,7 +12,6 @@ const BookPage = () => {
     const { bookId } = useParams();
     const [book, setBook] = useState({});
     const [bookState, setBookState] = useState('');
-    const [rate, setRate] = useState('');
     const [user, setUser] = useState({});
     const axiosPrivate = useAxiosPrivate();
     const controller = new AbortController();
@@ -36,21 +35,23 @@ const BookPage = () => {
         const getBookState = async () => {
             try {
                 const email = user.email;
-                const response = await axiosPrivate.post('/shelves/check-book',{
-                    email,
-                    bookId
-                }, 
-                {
-                    signal: controller.signal
-                });
+                if (email && bookId) {
+                    const response = await axiosPrivate.post('/shelves/check-book',{
+                        email,
+                        bookId
+                    }, 
+                    {
+                        signal: controller.signal
+                    });
 
-                setBookState(response.data)
+                    setBookState(response.data)
+                    }
             } catch (err) {
                 console.error(err)
             }
         }
         getBookState();
-    }, [user])
+    }, [user, bookId])
 
     useEffect(()=>{
         const getBook = async() => {
@@ -64,6 +65,7 @@ const BookPage = () => {
 
     const handleSave = async () => {
         try {
+            alert('Book has been saved');
             const email = user.email;
             const response = await axiosPrivate.put('/shelves/update-book',{
                 email,
@@ -73,7 +75,7 @@ const BookPage = () => {
             {
                 signal: controller.signal
             });
-            alert('Book has been added to the shelf')
+
         } catch (err) {
             console.error(err)
             alert('Something went wrong')
@@ -82,6 +84,8 @@ const BookPage = () => {
 
     const removeFromShelves = async () => {
         try {
+            alert('Book has been removed from your shelves')
+            setBookState('')
             const email = user.email;
             const response = await axiosPrivate.put('/shelves/update-book',{
                 email,
@@ -91,8 +95,6 @@ const BookPage = () => {
             {
                 signal: controller.signal
             });
-            alert('Book has been removed from your shelves')
-            setBookState('')
         } catch (err) {
             console.error(err)
             alert('Something went wrong')
@@ -122,20 +124,10 @@ const BookPage = () => {
                 <option value="currentlyReading">Currenly reading</option>
                 <option value="wantToRead">Want to read</option>
             </select>
-            {/* <div>
-                { 
-                    bookState === 'read' ?
-                    (<div>
-                        <h4>Your rate</h4>
-                        <div><input type="text" value={rate} onChange={(e)=>setRate(e.target.value)} style={{'width': '2em'}}/>/5</div>
-                    </div>) :
-                    ''
-                }
-            </div> */}
             <br/>
             <div className="d-flex flex-column gap-2 align-items-center">
                 <Button text='Save' onClick={handleSave}/>
-                <Button text='Remove from shelves' onClick={removeFromShelves} style={{'border-color':'red', 'background-color':'#ffa8a8'}}/>
+                <Button text='Remove from shelves' onClick={removeFromShelves} style={{'borderColor':'red', 'backgroundColor':'#ffa8a8'}}/>
             </div>
         </div>
     </section>

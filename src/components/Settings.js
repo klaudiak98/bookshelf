@@ -27,13 +27,16 @@ const Settings = () => {
     useEffect(() => {
         const result = PWD_REGEX.test(password);
         setValidPassword(result);
+        (password && !result) ? setErrMsg('Password need to have 8 or more characters with a mix of letters numbers and symbols') : setErrMsg('');
         const match = password === matchPassword;
         setValidMatchPassword(match);
+        if (matchPassword) {
+            !match ?
+                setErrMsg('Passwords do not match')
+                :
+                setErrMsg('')
+        }
     }, [password, matchPassword]);
-
-    useEffect(() => {
-        setErrMsg('');
-    }, [name, password, matchPassword]);
 
     useEffect(()=> {
         const controller = new AbortController();
@@ -50,39 +53,25 @@ const Settings = () => {
         }
         getUser()
     },[])
-
+    
     const handleSubmit = async(e) =>  {
         const controller = new AbortController();
         e.preventDefault();
 
-        if (validMatchPassword && name.length) 
-        {
             const email = user.email;
             try {
-                if (password.length) {
-                    const response = await axiosPrivate.patch(
-                        UPDATE_URL,
-                        JSON.stringify({
-                            email,
-                            password,
-                            name
-                        }),
-                        {
-                            signal: controller.signal
-                        }
-                    );
-                } else {
-                    const response = await axiosPrivate.patch(
-                        UPDATE_URL,
-                        JSON.stringify({
-                            email,
-                            name
-                        }),
-                        {
-                            signal: controller.signal
-                        }
-                    );
-                }
+                const response = await axiosPrivate.patch(
+                    UPDATE_URL,
+                    JSON.stringify({
+                        email,
+                        password,
+                        name
+                    }),
+                    {
+                        signal: controller.signal
+                    }
+                );
+
                 setPassword('');
                 setMatchPassword('');
                 alert('Your account has been updated')
@@ -91,7 +80,6 @@ const Settings = () => {
                     setErrMsg('No Server Response');
                 } else {setErrMsg(err.message)}
             }
-        }
     }
 
     const signOut = async () => {
@@ -102,7 +90,7 @@ const Settings = () => {
     return (
     <>
         <header className="d-flex justify-content-between">
-            <h1>Settings</h1> b
+            <h1>Settings</h1>
             <div style={{fontSize: "2em", paddingRight: "0.5em"}}>
                 <button onClick={signOut} style={{'background':'none', 'border':'none'}}><FaRegWindowClose color={"black"}/></button>
             </div>
@@ -121,7 +109,7 @@ const Settings = () => {
                             required
                             onChange={(e) => setName(e.target.value)}
                             placeholder="name"
-                            value={name}
+                            value={name || ''}
                         />
                     </FloatingLabel>
                 </Form.Group>

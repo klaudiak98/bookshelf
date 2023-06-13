@@ -7,7 +7,6 @@ import Register from './components/Register';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
 import Admin from './components/Admin';
-import NotFound from './components/NotFound';
 import Navbar from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
 import PersistLogin from './components/PersistLogin';
@@ -42,8 +41,6 @@ const App = () => {
               <Route path="/admin" element={<Admin/>}></Route>
             </Route>
           </Route>
-
-          <Route path='*' element={<NotFound/>}></Route>
 
         </Routes>
       </Card>
