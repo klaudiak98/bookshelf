@@ -13,7 +13,7 @@ import PersistLogin from './components/PersistLogin';
 import BookPage from './components/BookPage';
 
 const App = () => {
-  document.title = 'MasterThesisReact';
+  document.title = 'Bookshelf';
 
   const ROLES = {
     "User": 100,

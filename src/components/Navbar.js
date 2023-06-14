@@ -28,7 +28,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-        <Link to="/"><img src={Logo} alt="Logo" height="90px"/></Link>
+        <Link to="/"><img src={Logo} alt="Logo" height="90px" width='90px'/></Link>
         <div>
           <Form.Control type="text" placeholder="Search book" value={searchInput} onChange={handleChange} style={{'width': '20em'}}/>
           <div className="searchBarList">
@@ -40,7 +40,7 @@ const Navbar = () => {
                       <p className="title">{book?.volumeInfo?.title}</p>
                       {
                         book?.volumeInfo?.authors ?
-                          <p className="author">{book?.volumeInfo?.authors}</p> : 
+                          <p className="author">{book?.volumeInfo?.authors}</p> :
                           ''
                       }
                     </Link>
@@ -50,7 +50,7 @@ const Navbar = () => {
             }
           </div>
         </div>
-        <Link to={"/settings"}><FaCogs color={"black"} size={'2em'} /></Link>
+        <Link to={"/settings"} aria-label='settings'><FaCogs color={"black"} size={'2em'} /></Link>
     </nav>
   )
 }

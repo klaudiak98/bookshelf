@@ -2,6 +2,11 @@ a {
   text-decoration: none;
 }
 
+h1 {
+  color: #566270;
+  font-weight: bold;
+}
+
 .navbar {
   font-size: 1.3em;
   display: flex;
@@ -37,16 +42,20 @@ a {
 .btn {
   font-size: 1.2em;
   width: 8em;
-  background-color: rgba(29, 97, 63, 0.958);
   border-radius: 0.3em;
-  border-color: rgba(28, 135, 82, 0.958);
+  border-color: #566270;
+  background-color: #566270;
+  color: #FFFFF3;
 }
 
 .btn:hover,
 .btn:active,
-.btn:focus {
-  background-color: rgba(44, 178, 111, 0.958);
-  border-color: rgba(34, 161, 97, 0.958);
+.btn:focus,
+.btn:disabled,
+:not(.btn-check)+.btn:active{
+  background-color: #373f48;
+  border-color: #373f48;
+  color: #FFFFF3;
 }
 
 .form {
@@ -76,16 +85,9 @@ a {
   max-height: 10em;
 }
 
-section {
-  margin-bottom: 1.2em;
-}
-
-h1 {
-  font-weight: bold;
-}
-
 .errMsg {
   font-weight: bold;
+  color: #566270;
 }
 
 .title {
@@ -104,4 +106,15 @@ h1 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.link {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  color: #566270;
+}
+
+.form-floating>.form-control:focus {
+  box-shadow: 0 0 0 0.25rem #5662703c;
+  border-color: #5662703c;
 }

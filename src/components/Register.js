@@ -1,42 +1,42 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Form, FloatingLabel } from 'react-bootstrap';
 import Button from "./Button";
 import axios from '../api/axios';
+import ClipLoader from "react-spinners/ClipLoader";
+import Modal from 'react-bootstrap/Modal';
 
 const Register = () => {
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
+    const REGISTER_URL = "/register";
+    const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
-    const [password, setPassword] = useState('');
-    const [validPassword, setValidPassword] = useState(false);
-
-    const [matchPassword, setMatchPassword] = useState('');
-    const [validMatchPassword, setValidMatchPassword] = useState(false);
+    const [ userInfo, setUserInfo ] = useState({
+        email: '',
+        name: '',
+        password: '',
+        matchPassword: ''
+    });
 
     const [errMsg, setErrMsg] = useState('');
+    const [isSending, setIsSending] = useState(false);
 
-    const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-    const REGISTER_URL = "/register";
-    
-    useEffect(() => {
-        const result = PWD_REGEX.test(password);
-        setValidPassword(result);
-        (password && !result) ? setErrMsg('Password need to have 8 or more characters with a mix of letters numbers and symbols') : setErrMsg('');
-        const match = password === matchPassword;
-        setValidMatchPassword(match);
-        if (matchPassword) {
-            !match ?
-                setErrMsg('Passwords do not match')
-                :
-                setErrMsg('')
-        }
-    }, [password, matchPassword]);
+    const [showModal, setShowModal] = useState(false);
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => setShowModal(true);
+
+    const validPasswords = (PWD_REGEX.test(userInfo.password) && (userInfo.password === userInfo.matchPassword));
+    const wrongPassword = (userInfo.password && !PWD_REGEX.test(userInfo.password));
+    const wrongMatchPasswords = (userInfo.matchPassword && (userInfo.password !== userInfo.matchPassword))
 
     const handleSubmit = async(e) =>  {
         e.preventDefault();
+        setIsSending(true);
         try {
-            const response = await axios.post(
+            const email = userInfo.email;
+            const password = userInfo.password;
+            const name = userInfo.name;
+
+            await axios.post(
                 REGISTER_URL,
                 JSON.stringify({
                     email,
@@ -48,42 +48,50 @@ const Register = () => {
                     withCredentials: true
                 }
             );
-            setEmail('');
-            setPassword('');
-            setMatchPassword('');
-            setName('');
-            alert('New account has been created')
-        } catch (err) { 
+
+            setUserInfo({
+                email: '',
+                name: '',
+                password: '',
+                matchPassword: ''
+            });
+
+            handleShow();
+        } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response?.status === 409) {
-                setErrMsg(`Account ${email} already exists`);
+                setErrMsg(`Account ${userInfo.email} already exists`);
             } else {
                 setErrMsg('Registration faild');
             }
         }
-        setValidMatchPassword(false);
-        setValidPassword(false);
+        setIsSending(false);
     }
 
     return (
         <section className="form">
             <h1>Create new account</h1>
             <p className='errMsg'>{errMsg}</p>
+            { wrongPassword ?
+                <p className='errMsg'>Password need to have 8 or more characters with a mix of letters numbers and symbols</p> : ''}
+            { wrongMatchPasswords ?
+                <p className='errMsg'>Passwords do not match</p> : ''}
 
-             <Form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formEmail">
                     <FloatingLabel
                         label="email"
                         className="mb-3"
                         controlId="email"
                     >
-                        <Form.Control 
-                            type="email" 
-                            onChange={(e) => setEmail(e.target.value)} 
+                        <Form.Control className='form-focus'
+                            type="email"
+                            onChange={(e) => setUserInfo({ ...userInfo, email: e.target.value})}
                             required
                             placeholder="email"
-                            value={email}
+                            value={userInfo.email}
+                            autoComplete='username'
                         />
                     </FloatingLabel>
                 </Form.Group>
@@ -94,12 +102,13 @@ const Register = () => {
                         className="mb-3"
                         controlId="password"
                     >
-                        <Form.Control 
+                        <Form.Control
                             type="password"
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => setUserInfo({ ...userInfo, password: e.target.value})}
                             required
                             placeholder="password"
-                            value={password}
+                            value={userInfo.password}
+                            autoComplete='new-password'
                         />
                     </FloatingLabel>
                 </Form.Group>
@@ -110,12 +119,13 @@ const Register = () => {
                         className="mb-3"
                         controlId="matchPassword"
                     >
-                        <Form.Control 
-                            type="password" 
-                            onChange={(e) => setMatchPassword(e.target.value)}
+                        <Form.Control
+                            type="password"
+                            onChange={(e) => setUserInfo({ ...userInfo, matchPassword: e.target.value})}
                             required
                             placeholder="password again"
-                            value={matchPassword}
+                            value={userInfo.matchPassword}
+                            autoComplete='new-password'
                         />
                     </FloatingLabel>
                 </Form.Group>
@@ -126,25 +136,52 @@ const Register = () => {
                         className="mb-3"
                         controlId="name"
                     >
-                        <Form.Control 
-                            type="text" 
+                        <Form.Control
+                            type="text"
                             required
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value})}
                             placeholder="name"
-                            value={name}
+                            value={userInfo.name}
                         />
                     </FloatingLabel>
                 </Form.Group>
 
-                <Button 
-                    text='Register' 
+                <Button
+                    text='Register'
                     type='submit'
-                    disabled={!name || !validPassword || !validMatchPassword}
+                    disabled={isSending || !validPasswords || !userInfo.name || !userInfo.email}
                 />
 
-             </Form>
-            
-            <Link to="/login"><p>or login</p></Link>
+                {isSending &&
+                    <ClipLoader
+                        color="#566270"
+                        cssOverride={{
+                            position: 'fixed',
+                            top: '50vh',
+                            left: '50vw'
+                        }}
+                        loading
+                        aria-label="Loading Spinner"
+                        size={75}
+                        speedMultiplier={0.75}
+                    />
+                }
+
+            </Form>
+
+            <Link to="/login"><p className="link">or login</p></Link>
+
+            {/* modal */}
+            <Modal show={showModal} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Congratulations!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>New account has been created</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose} text='ok, got it'/>
+                </Modal.Footer>
+            </Modal>
+
         </section>
     )}
 
