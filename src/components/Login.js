@@ -4,8 +4,11 @@ import { Form, FloatingLabel } from 'react-bootstrap';
 import Button from "./Button";
 import axios from '../api/axios';
 import useAuth from '../hooks/useAuth';
+import ClipLoader from "react-spinners/ClipLoader";
 
 const Login = () => {
+    const LOGIN_URL = "/auth";
+
     const { setAuth } = useAuth();
 
     const navigate = useNavigate();
@@ -15,15 +18,11 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errMsg, setErrMsg] = useState('');
-
-    const LOGIN_URL = "/auth";
-
-    useEffect(() => {
-        setErrMsg('');
-    },[email, password])
+    const [isSending, setIsSending] = useState(false);
 
     const handleSubmit = async (e) =>  {
         e.preventDefault();
+        setIsSending(true);
 
         try {
             const response = await axios.post(
@@ -42,6 +41,7 @@ const Login = () => {
             setAuth({email, password, roles, accessToken});
             setEmail('');
             setPassword('');
+            setErrMsg('');
             navigate(from, {replace: true, state:{roles: roles}});
         } catch (err) {
             if (!err?.response) {
@@ -54,6 +54,7 @@ const Login = () => {
                 setErrMsg('Login faild');
             }
         }
+        setIsSending(false);
     }
 
     return (
@@ -100,9 +101,24 @@ const Login = () => {
                         type='submit'
                         disabled={!email || !password}
                     />
+
+                    {isSending &&
+                        <ClipLoader
+                            color="#566270"
+                            cssOverride={{
+                                position: 'fixed',
+                                top: '50vh',
+                                left: '50vw'
+                            }}
+                            loading
+                            aria-label="Loading Spinner"
+                            size={75}
+                            speedMultiplier={0.75}
+                        />
+                    }
                 </Form>
 
-                <Link to="/register"><p>or create new account!</p></Link>
+                <Link to="/register">or create new account!</Link>
             </section>
         </>
     )

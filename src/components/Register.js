@@ -169,7 +169,7 @@ const Register = () => {
 
             </Form>
 
-            <Link to="/login"><p className="link">or login</p></Link>
+            <Link to="/login">or login</Link>
 
             {/* modal */}
             <Modal show={showModal} onHide={handleClose}>
