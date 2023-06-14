@@ -1,12 +1,3 @@
-a {
-  text-decoration: none;
-}
-
-h1 {
-  color: #566270;
-  font-weight: bold;
-}
-
 .navbar {
   font-size: 1.3em;
   display: flex;
@@ -37,25 +28,6 @@ h1 {
 .box:hover {
   background-color: #abababcf;
   box-shadow: 0 0 5px -1px rgba(0, 0, 0, 0.6);
-}
-
-.btn {
-  font-size: 1.2em;
-  width: 8em;
-  border-radius: 0.3em;
-  border-color: #566270;
-  background-color: #566270;
-  color: #FFFFF3;
-}
-
-.btn:hover,
-.btn:active,
-.btn:focus,
-.btn:disabled,
-:not(.btn-check)+.btn:active{
-  background-color: #373f48;
-  border-color: #373f48;
-  color: #FFFFF3;
 }
 
 .form {
@@ -117,4 +89,38 @@ h1 {
 .form-floating>.form-control:focus {
   box-shadow: 0 0 0 0.25rem #5662703c;
   border-color: #5662703c;
+}
+
+@import "./styles/variables";
+@import "./styles/mixins";
+
+h1 {
+  font-weight: bold;
+}
+
+a {
+  text-decoration: $text-decoration;
+}
+
+.btn
+{
+  @include btn-style;
+  background-color: $primary-color;
+  border-color: $primary-color;
+  color: $light-color;
+  
+  &:hover{
+    background-color: darken($primary-color, 10%);
+    border-color: darken($primary-color, 10%);
+  }
+
+  :not(.btn-check)+&:active{
+    background-color: darken($primary-color, 40%);
+    border-color: darken($primary-color, 40%);
+  }
+
+  &:disabled{
+    background-color: lighten($primary-color, 10%);
+    border-color: lighten($primary-color, 10%);
+  }
 }

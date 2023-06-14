@@ -77,7 +77,7 @@ const Register = () => {
                 <p className='errMsg'>Password need to have 8 or more characters with a mix of letters numbers and symbols</p> : ''}
             { wrongMatchPasswords ?
                 <p className='errMsg'>Passwords do not match</p> : ''}
-
+                
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formEmail">
                     <FloatingLabel

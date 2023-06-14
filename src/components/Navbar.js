@@ -28,7 +28,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-        <Link to="/"><img src={Logo} alt="Logo" height="90px" width='90px'/></Link>
+        <Link to="/"><img src="logo.png" alt="logo" style={{'width': '20vw'}}/></Link>
         <div>
           <Form.Control type="text" placeholder="Search book" value={searchInput} onChange={handleChange} style={{'width': '20em'}}/>
           <div className="searchBarList">
