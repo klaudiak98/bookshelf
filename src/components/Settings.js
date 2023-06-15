@@ -5,6 +5,7 @@ import Button from "./Button";
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { useNavigate } from "react-router-dom"
 import useLogout from '../hooks/useLogout';
+import ClipLoader from "react-spinners/ClipLoader";
 
 const Settings = () => {
 
@@ -15,28 +16,17 @@ const Settings = () => {
 
     const [name, setName] = useState(user.name);
     const [password, setPassword] = useState('');
-    const [validPassword, setValidPassword] = useState(false);
     const [matchPassword, setMatchPassword] = useState('');
-    const [validMatchPassword, setValidMatchPassword] = useState(false);
 
     const [errMsg, setErrMsg] = useState('');
+    const [isSending, setIsSending] = useState(false);
 
     const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
     const UPDATE_URL = "/users/update";
 
-    useEffect(() => {
-        const result = PWD_REGEX.test(password);
-        setValidPassword(result);
-        (password && !result) ? setErrMsg('Password need to have 8 or more characters with a mix of letters numbers and symbols') : setErrMsg('');
-        const match = password === matchPassword;
-        setValidMatchPassword(match);
-        if (matchPassword) {
-            !match ?
-                setErrMsg('Passwords do not match')
-                :
-                setErrMsg('')
-        }
-    }, [password, matchPassword]);
+    const validPasswords = (PWD_REGEX.test(password) && (password === matchPassword));
+    const wrongPassword = (password && !PWD_REGEX.test(password));
+    const wrongMatchPasswords = (matchPassword && (password !== matchPassword))
 
     useEffect(()=> {
         const controller = new AbortController();
@@ -57,29 +47,31 @@ const Settings = () => {
     const handleSubmit = async(e) =>  {
         const controller = new AbortController();
         e.preventDefault();
+        setIsSending(true);
 
-            const email = user.email;
-            try {
-                const response = await axiosPrivate.patch(
-                    UPDATE_URL,
-                    JSON.stringify({
-                        email,
-                        password,
-                        name
-                    }),
-                    {
-                        signal: controller.signal
-                    }
-                );
+        const email = user.email;
+        try {
+            const response = await axiosPrivate.patch(
+                UPDATE_URL,
+                JSON.stringify({
+                    email,
+                    password,
+                    name
+                }),
+                {
+                    signal: controller.signal
+                }
+            );
 
-                setPassword('');
-                setMatchPassword('');
-                alert('Your account has been updated')
-            } catch (err) { 
-                if (!err?.response) {
-                    setErrMsg('No Server Response');
-                } else {setErrMsg(err.message)}
-            }
+            setPassword('');
+            setMatchPassword('');
+            alert('Your account has been updated')
+        } catch (err) { 
+            if (!err?.response) {
+                setErrMsg('No Server Response');
+            } else {setErrMsg(err.message)}
+        }
+        setIsSending(false);
     }
 
     const signOut = async () => {
@@ -97,6 +89,11 @@ const Settings = () => {
         </header>
         <section className="form">
             <p className='errMsg'>{errMsg}</p>
+            { wrongPassword ?
+                <p className='errMsg'>Password need to have 8 or more characters with a mix of letters numbers and symbols</p> : ''}
+            { wrongMatchPasswords ?
+                <p className='errMsg'>Passwords do not match</p> : ''}
+
             <Form>
                 <Form.Group className="mb-3" controlId="formName">
                     <FloatingLabel
@@ -151,8 +148,23 @@ const Settings = () => {
                     text='Save' 
                     type='submit'
                     onClick={handleSubmit}
+                    disabled={password && !validPasswords}
                 />
 
+                {isSending &&
+                    <ClipLoader
+                        color="#566270"
+                        cssOverride={{
+                            position: 'fixed',
+                            top: '50vh',
+                            left: '50vw'
+                        }}
+                        loading
+                        aria-label="Loading Spinner"
+                        size={75}
+                        speedMultiplier={0.75}
+                    />
+                }
               </Form>
         </section>
       </>
