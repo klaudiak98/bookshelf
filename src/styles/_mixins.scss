@@ -2,3 +2,13 @@
     width: 8em;
     border-radius: 0.3em;
 }
+
+@mixin flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin space-between {
+    display: flex;
+    justify-content: space-between;
+}

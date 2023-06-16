@@ -59,7 +59,7 @@ const Login = () => {
 
     return (
         <>
-            <section className="form">
+            <section className="container">
                 <h1>Login</h1>
                 <p className='errMsg'>{errMsg}</p>
 

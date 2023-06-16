@@ -70,7 +70,7 @@ const Register = () => {
     }
 
     return (
-        <section className="form">
+        <section className="container">
             <h1>Create new account</h1>
             <p className='errMsg'>{errMsg}</p>
             { wrongPassword ?

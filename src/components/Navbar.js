@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom"
-import Logo from '../logo.svg'
 import { useEffect, useState } from "react"
 import { Form } from "react-bootstrap"
 import { FaCogs } from "react-icons/fa"
@@ -17,26 +16,35 @@ const Navbar = () => {
     };
 
     useEffect(()=> {
+      let ignore = false;
+
       const getBook = async() => {
         const search = searchInput.replace(/\s+/g, '_')
         const response = await axios.get(`${GOOGLE_BOOKS_API}${search}`);
-        setBooks(response.data?.items);
+        if (!ignore) {
+          setBooks(response.data?.items);
+        }
       }
 
       searchInput.length ? getBook() : setBooks([]);
+
+      return () => {
+        ignore = true;
+      };
+
     },[searchInput])
 
   return (
     <nav className="navbar">
-        <Link to="/"><img src="logo.png" alt="logo" style={{'width': '20vw'}}/></Link>
+        <Link to="/"><img src="logo.png" alt="logo" className="logo"/></Link>
         <div>
-          <Form.Control type="text" placeholder="Search book" value={searchInput} onChange={handleChange} style={{'width': '20em'}}/>
+          <Form.Control type="text" placeholder="Search book" value={searchInput} onChange={handleChange} className="searchBar"/>
           <div className="searchBarList">
             {
               books?.map(book => {
                 return(
                   <div className="box" key={book?.id}>
-                    <Link to={`/book/${book?.id}`} style={{'color': 'black'}} onClick={()=>setSearchInput('')}>
+                    <Link to={`/book/${book?.id}`} onClick={()=>setSearchInput('')}>
                       <p className="title">{book?.volumeInfo?.title}</p>
                       {
                         book?.volumeInfo?.authors ?
@@ -50,7 +58,7 @@ const Navbar = () => {
             }
           </div>
         </div>
-        <Link to={"/settings"} aria-label='settings'><FaCogs color={"black"} size={'2em'} /></Link>
+        <Link to={"/settings"} aria-label='settings'><FaCogs className="settingsButton"/></Link>
     </nav>
   )
 }

@@ -51,7 +51,7 @@ const Settings = () => {
 
         const email = user.email;
         try {
-            const response = await axiosPrivate.patch(
+            await axiosPrivate.patch(
                 UPDATE_URL,
                 JSON.stringify({
                     email,
@@ -81,13 +81,15 @@ const Settings = () => {
 
     return (
     <>
-        <header className="d-flex justify-content-between">
+        <header className="header">
             <h1>Settings</h1>
-            <div style={{fontSize: "2em", paddingRight: "0.5em"}}>
-                <button onClick={signOut} style={{'background':'none', 'border':'none'}}><FaRegWindowClose color={"black"}/></button>
+            <div className="signOutButton">
+                <button onClick={signOut}>
+                    <FaRegWindowClose/>
+                </button>
             </div>
         </header>
-        <section className="form">
+        <section className="container">
             <p className='errMsg'>{errMsg}</p>
             { wrongPassword ?
                 <p className='errMsg'>Password need to have 8 or more characters with a mix of letters numbers and symbols</p> : ''}

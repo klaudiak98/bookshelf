@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import BooksList from "./BooksList";
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import ClipLoader from "react-spinners/ClipLoader";
 
 const Profile = () => {
 
@@ -8,9 +9,11 @@ const Profile = () => {
     const axiosPrivate = useAxiosPrivate();
     const [user, setUser] = useState({});
     const [shelf, setShelf] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(()=> {
         const getUser = async () => {
+            setIsLoading(true);
             try {
                 const response = await axiosPrivate.get('/users/me', {
                 signal: controller.signal
@@ -20,6 +23,7 @@ const Profile = () => {
             } catch (err) {
                 console.error(err)
             }
+            setIsLoading(false);
         }
         getUser()
     },[])
@@ -27,6 +31,7 @@ const Profile = () => {
     useEffect(() => {
         const getShelf = async () => {
             if (user?.email) {
+                setIsLoading(true);
                 try {
                     const response = await axiosPrivate.post('/shelves/my-shelf', 
                     { 'email':  user?.email},
@@ -38,6 +43,7 @@ const Profile = () => {
                 } catch (err) {
                     console.error(err)
                 }
+                setIsLoading(false);
             }
         }
 
@@ -61,6 +67,21 @@ const Profile = () => {
                 <h3>Read</h3>
                 {shelf?.read ? <BooksList booksId={shelf?.read}/> : ''}
             </section>
+
+            {isLoading &&
+                <ClipLoader
+                    color="#566270"
+                    cssOverride={{
+                        position: 'fixed',
+                        top: '50vh',
+                        left: '50vw'
+                    }}
+                    loading
+                    aria-label="Loading Spinner"
+                    size={75}
+                    speedMultiplier={0.75}
+                />
+            }
         </>
     )
 }

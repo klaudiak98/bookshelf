@@ -1,10 +1,10 @@
 import { Button as BootstrapButton} from 'react-bootstrap';
 
- const Button = ({text, type, disabled, onClick, style}) => {
+ const Button = ({text, type, disabled, onClick, style, className}) => {
 
   return (
     <BootstrapButton 
-      className="btn" 
+      className={"btn " + className}
       type={type} 
       onClick={onClick} 
       style={style} 

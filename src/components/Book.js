@@ -20,14 +20,16 @@ const Book = ({bookId}) => {
     const desc = book?.volumeInfo?.description || 'Brak opisu';
 
     return (
-    <div className="item d-flex" id={book?.id}>
-        <div><img src={book?.volumeInfo?.imageLinks?.thumbnail || BookCoverPlaceholder} alt="Book cover placeholder"/></div>
-        <div style={{'width': '100%'}}>
-            <h4 style={{fontWeight: "bold", display: "flex", justifyContent: "space-between"}}>
+    <div className="item book" id={book?.id}>
+        <div>
+            <img src={book?.volumeInfo?.imageLinks?.thumbnail || BookCoverPlaceholder} alt="Book cover placeholder" className='bookImg'/>
+        </div>
+        <div className="bookInfo">
+            <h4>
                 {book?.volumeInfo?.title} 
                 <Link to={`/book/${book?.id}`}><FaRegEdit/></Link>
             </h4>
-            <h5 style={{'fontWeight':'bold'}}>{book?.volumeInfo?.subtitle}</h5>
+            <h5 className='subtitle'>{book?.volumeInfo?.subtitle}</h5>
             <h5>{book?.voulumeInfo?.authors}</h5>
             <p>{book?.volumeInfo?.publisher}, {book?.volumeInfo?.publishedDate}</p>
             <br/>

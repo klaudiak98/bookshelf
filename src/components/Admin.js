@@ -13,7 +13,7 @@ const Admin = () => {
   const deleteUser = async ( email) => {
     const controller = new AbortController();
      try {
-        const response = await axiosPrivate.post('/users/delete',
+        await axiosPrivate.post('/users/delete',
         {'email': email}, 
         {
           signal: controller.signal
@@ -66,12 +66,11 @@ const Admin = () => {
             {
               users.map((user, index) => 
                 <div 
-                  className="item d-flex justify-content-between align-items-center" 
+                  className="item user" 
                   key={index}>
                     {user?.name}, {user?.email}
                     <FaRegWindowClose 
-                      style={{fontSize: '1.4em'}} 
-                      color='red' 
+                      className="removeUserIcon"
                       onClick={(e) => deleteUser(user.email)}/>
                 </div>)
             }
