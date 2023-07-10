@@ -5,6 +5,7 @@ import Button from "./Button";
 import BookCoverPlaceholder from '../images/book-cover-placeholder.png';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import ClipLoader from "react-spinners/ClipLoader";
+import Modal from 'react-bootstrap/Modal';
 
 const GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes/';
 
@@ -17,7 +18,12 @@ const BookPage = () => {
     const axiosPrivate = useAxiosPrivate();
     const controller = new AbortController();
     const [isLoading, setIsLoading] = useState(false);
-    
+
+    const [showModal, setShowModal] = useState(false);
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => setShowModal(true);
+    const [modalText, setModalText] = useState('')
+
     useEffect(()=> {
         const getUser = async () => {
             setIsLoading(true);
@@ -44,7 +50,7 @@ const BookPage = () => {
                     const response = await axiosPrivate.post('/shelves/check-book',{
                         email,
                         bookId
-                    }, 
+                    },
                     {
                         signal: controller.signal
                     });
@@ -71,58 +77,61 @@ const BookPage = () => {
 
     const handleSave = async () => {
         try {
-            alert('Book has been saved');
+            setModalText('Book has been saved')
+            handleShow();
             const email = user.email;
             await axiosPrivate.put('/shelves/update-book',{
                 email,
                 bookId,
                 'newState': bookState
-            }, 
+            },
             {
                 signal: controller.signal
             });
-
         } catch (err) {
+            setModalText('Something went wrong')
+            handleShow();
             console.error(err)
-            alert('Something went wrong')
         }
     }
 
     const removeFromShelves = async () => {
         try {
-            alert('Book has been removed from your shelves')
+            setModalText('Book has been removed from your shelves')
             setBookState('')
+            handleShow();
             const email = user.email;
             await axiosPrivate.put('/shelves/update-book',{
                 email,
                 bookId,
                 'newState': ''
-            }, 
+            },
             {
                 signal: controller.signal
             });
         } catch (err) {
+            setModalText('Something went wrong')
+            handleShow();
             console.error(err)
-            alert('Something went wrong')
         }
     }
 
   return (
     <>
-    <header className="header bookPageHeader">
-        <div>
+    <header className="header bookPageHeader row">
+        <div className="col-md-9">
             <h1>{book?.volumeInfo?.title}</h1>
             <h2>{book?.volumeInfo?.subtitle}</h2>
             <h3>{book?.volumeInfo?.authors}</h3>
             <p>{book?.volumeInfo?.publisher}, {book?.volumeInfo?.publishedDate}</p>
         </div>
-        <div>
+        <div className="col-md-3 d-flex justify-content-center">
             <img src={book?.volumeInfo?.imageLinks?.thumbnail || BookCoverPlaceholder} alt="cover"/>
         </div>
     </header>
 
-    <section className="bookPageContainer">
-        <div className="bookPageInfo">
+    <section className="bookPageContainer row">
+        <div className="bookPageInfo col-md-6 col-sm-9">
             <h3>Your shelves</h3>
             <select value={bookState} onChange={(e) => setBookState(e.target.value)} className="mb-2">
                 <option disabled value="">-- Select --</option>
@@ -138,7 +147,7 @@ const BookPage = () => {
         </div>
     </section>
 
-    <section>
+    <section className="row">
         <div dangerouslySetInnerHTML={ desc }></div>
     </section>
 
@@ -156,6 +165,14 @@ const BookPage = () => {
             speedMultiplier={0.75}
         />
     }
+
+        {/* modal */}
+        <Modal show={showModal} onHide={handleClose}>
+            <Modal.Body>{modalText}</Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={handleClose} text='ok, got it'/>
+            </Modal.Footer>
+        </Modal>
     </>
   )
 }

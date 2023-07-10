@@ -24,7 +24,7 @@ const App = () => {
     <>
       <Navbar/>
 
-      <Card body className='mx-5 bg-light'>
+      <Card body className='mx-2 mx-md-5 bg-light'>
         <Routes>
           <Route path="/login" element={<Login/>}></Route>
           <Route path="/register" element={<Register/>}></Route>

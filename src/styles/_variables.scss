@@ -1,3 +1,5 @@
+$breakpoint-md: 992px;
+
 $background-color: #A593E0;
 $primary-color: #566270;
 $secondary-color: #E0E3DA;
@@ -9,5 +11,8 @@ $text-decoration: none;
 $btn-width: 8em;
 $btn-border-radius: 0.3em;
 
-$searchbar-width: 20em;
-$searchbar-box-width: 20rem;
+$searchbar-width: 30em;
+$searchbar-box-width: 28rem;
+
+$searchbar-md-width: 100%;
+$searchbar-md-box-width: 80%

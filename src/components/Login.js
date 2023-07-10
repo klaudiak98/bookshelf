@@ -59,7 +59,7 @@ const Login = () => {
 
     return (
         <>
-            <section className="container">
+            <section className="cont">
                 <h1>Login</h1>
                 <p className='errMsg'>{errMsg}</p>
 
@@ -70,11 +70,11 @@ const Login = () => {
                             label="email"
                             className="mb-3"
                         >
-                            <Form.Control 
-                                type="email" 
+                            <Form.Control
+                                type="email"
                                 placeholder="email"
-                                onChange={(e) => setEmail(e.target.value)} 
-                                value={email} 
+                                onChange={(e) => setEmail(e.target.value)}
+                                value={email}
                                 required
                             />
                         </FloatingLabel>
@@ -86,18 +86,18 @@ const Login = () => {
                             label="password"
                             className="mb-3"
                         >
-                            <Form.Control 
-                                type="password" 
-                                placeholder="password" 
-                                onChange={(e) => setPassword(e.target.value)} 
-                                value={password} 
+                            <Form.Control
+                                type="password"
+                                placeholder="password"
+                                onChange={(e) => setPassword(e.target.value)}
+                                value={password}
                                 required
                             />
                         </FloatingLabel>
                     </Form.Group>
 
-                    <Button 
-                        text='Login' 
+                    <Button
+                        text='Login'
                         type='submit'
                         disabled={!email || !password}
                     />

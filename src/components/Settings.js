@@ -6,6 +6,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { useNavigate } from "react-router-dom"
 import useLogout from '../hooks/useLogout';
 import ClipLoader from "react-spinners/ClipLoader";
+import Modal from 'react-bootstrap/Modal';
 
 const Settings = () => {
 
@@ -13,6 +14,10 @@ const Settings = () => {
     const [user, setUser] = useState({});
     const navigate = useNavigate();
     const logout = useLogout();
+
+    const [showModal, setShowModal] = useState(false);
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => setShowModal(true);
 
     const [name, setName] = useState(user.name);
     const [password, setPassword] = useState('');
@@ -43,7 +48,7 @@ const Settings = () => {
         }
         getUser()
     },[])
-    
+
     const handleSubmit = async(e) =>  {
         const controller = new AbortController();
         e.preventDefault();
@@ -65,8 +70,9 @@ const Settings = () => {
 
             setPassword('');
             setMatchPassword('');
-            alert('Your account has been updated')
-        } catch (err) { 
+            handleShow();
+
+        } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else {setErrMsg(err.message)}
@@ -89,7 +95,7 @@ const Settings = () => {
                 </button>
             </div>
         </header>
-        <section className="container">
+        <section className="cont">
             <p className='errMsg'>{errMsg}</p>
             { wrongPassword ?
                 <p className='errMsg'>Password need to have 8 or more characters with a mix of letters numbers and symbols</p> : ''}
@@ -103,8 +109,8 @@ const Settings = () => {
                         className="mb-3"
                         controlId="name"
                     >
-                        <Form.Control 
-                            type="text" 
+                        <Form.Control
+                            type="text"
                             required
                             onChange={(e) => setName(e.target.value)}
                             placeholder="name"
@@ -120,7 +126,7 @@ const Settings = () => {
                         className="mb-3"
                         controlId="password"
                     >
-                        <Form.Control 
+                        <Form.Control
                             type="password"
                             onChange={(e) => setPassword(e.target.value)}
                             required
@@ -136,8 +142,8 @@ const Settings = () => {
                         className="mb-3"
                         controlId="matchPassword"
                     >
-                        <Form.Control 
-                            type="password" 
+                        <Form.Control
+                            type="password"
                             onChange={(e) => setMatchPassword(e.target.value)}
                             required
                             placeholder="password again"
@@ -146,8 +152,8 @@ const Settings = () => {
                     </FloatingLabel>
                 </Form.Group>
 
-                <Button 
-                    text='Save' 
+                <Button
+                    text='Save'
                     type='submit'
                     onClick={handleSubmit}
                     disabled={password && !validPasswords}
@@ -169,6 +175,14 @@ const Settings = () => {
                 }
               </Form>
         </section>
+
+        {/* modal */}
+        <Modal show={showModal} onHide={handleClose}>
+            <Modal.Body>Your account has been updated</Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={handleClose} text='ok, got it'/>
+            </Modal.Footer>
+        </Modal>
       </>
   )
 }

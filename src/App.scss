@@ -24,11 +24,12 @@ a {
   color: $danger-color;
 }
 
-.container {
+.cont {
   @include flex-column;
 
   &>h1 {
     align-self: center;
+    text-align: center;
   }
 }
 
@@ -47,24 +48,23 @@ a {
   }
 }
 
-.btn
-{
+.btn {
   @include btn-style;
   background-color: $primary-color;
   border-color: $primary-color;
   color: $light-color;
-  
-  &:hover{
+
+  &:hover {
     background-color: darken($primary-color, 10%);
     border-color: darken($primary-color, 10%);
   }
 
-  :not(.btn-check)+&:active{
+  :not(.btn-check)+&:active {
     background-color: darken($primary-color, 40%);
     border-color: darken($primary-color, 40%);
   }
 
-  &:disabled{
+  &:disabled {
     background-color: lighten($primary-color, 10%);
     border-color: lighten($primary-color, 10%);
   }
@@ -76,13 +76,16 @@ a {
   align-items: center;
   margin: 1em 1.5em;
 
+  .toggleButton {
+    color: $primary-color;
+  }
+
   .logo {
-    width: 20vw;
+    width: 30vw;
+    max-width: 400px;
   }
 
   .searchBar {
-    width: $searchbar-width;
-
     &:focus {
       border-color: $secondary-color;
       box-shadow: 0 0 3px 0.20rem $secondary-color;
@@ -91,14 +94,13 @@ a {
 
   .searchBarList {
     position: absolute;
-    top: 2.5em;
+    top: 3.5em;
     z-index: 100;
 
     .box {
       border: $primary-color solid 1px;
       border-radius: 0.375rem;
       margin: 2px;
-      width: $searchbar-box-width;
       padding-left: 5px;
       background-color: $light-color;
       cursor: pointer;
@@ -140,7 +142,6 @@ a {
   padding: 0.7em;
   border-radius: 0.5em;
   background-color: $light-color;
-  gap: 1.5em;
 }
 
 .book {
@@ -151,7 +152,6 @@ a {
   }
 
   .bookInfo {
-    width: 100%;
 
     h4,
     .subtitle {
@@ -163,7 +163,6 @@ a {
     }
 
     .truncateLongTexts {
-      width: 35em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -211,7 +210,7 @@ a {
   }
 
   img {
-    height: 192px;
+    height: 30vh;
     border: 1px solid $primary-color;
   }
 }
@@ -221,6 +220,8 @@ a {
   padding-right: 2em;
   text-align: center;
   margin-bottom: 1.5em;
+  display: flex;
+  justify-content: center;
 
   .bookPageInfo {
     border: 1px solid $primary-color;
@@ -246,8 +247,8 @@ a {
         background-color: lighten($danger-color, 5%);
 
         &:hover {
-            background-color: $danger-color;
-          }
+          background-color: $danger-color;
+        }
       }
     }
   }
@@ -256,4 +257,28 @@ a {
 .bookDescription {
   padding-left: 2em;
   padding-right: 2em;
+}
+
+@media (max-width: $breakpoint-md) {
+  .searchBar {
+    width: $searchbar-md-width;
+  }
+
+  .searchBarList {
+    .box {
+      width: $searchbar-md-box-width;
+    }
+  }
+}
+
+@media (min-width: $breakpoint-md) {
+  .searchBar {
+    width: $searchbar-width;
+  }
+
+  .searchBarList {
+    .box {
+      width: $searchbar-box-width;
+    }
+  }
 }

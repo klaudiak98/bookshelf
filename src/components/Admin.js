@@ -2,6 +2,8 @@ import {useState,useEffect, useRef} from 'react';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaRegWindowClose } from "react-icons/fa"
+import Modal from 'react-bootstrap/Modal';
+import Button from "./Button";
 
 const Admin = () => {
   const [users, setUsers] = useState();
@@ -9,6 +11,11 @@ const Admin = () => {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [showModal, setShowModal] = useState(false);
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
+    const [modalText, setModalText] = useState('')
 
   const deleteUser = async ( email) => {
     const controller = new AbortController();
@@ -21,10 +28,12 @@ const Admin = () => {
 
         const newUsersArray = users.filter(u => u.email !== email)
         setUsers(newUsersArray);
-        alert('The user has been deleted');
+        setModalText('The user has been deleted')
+        handleShow();
       } catch (err) {
         console.error(err)
-        alert('Something went wrong');
+        setModalText('Something went wrong')
+        handleShow();
       }
   }
 
@@ -78,6 +87,14 @@ const Admin = () => {
         ) :
           <p>No users to display</p>
       }
+
+      {/* modal */}
+      <Modal show={showModal} onHide={handleClose}>
+          <Modal.Body>{modalText}</Modal.Body>
+          <Modal.Footer>
+              <Button variant="primary" onClick={handleClose} text='ok, got it'/>
+          </Modal.Footer>
+      </Modal>
     </section>
   )
 }

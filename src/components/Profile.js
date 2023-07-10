@@ -4,7 +4,6 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import ClipLoader from "react-spinners/ClipLoader";
 
 const Profile = () => {
-
     const controller = new AbortController();
     const axiosPrivate = useAxiosPrivate();
     const [user, setUser] = useState({});
@@ -46,7 +45,6 @@ const Profile = () => {
                 setIsLoading(false);
             }
         }
-
         getShelf()
     }, [user])
 
@@ -55,15 +53,15 @@ const Profile = () => {
             <header style={{display: "flex", justifyContent: "space-between"}}>
                 <h1>Hi {user?.name}</h1>
             </header>
-            <section>
+            <section className="mt-4">
                 <h3>Currently reading</h3>
                 {shelf?.currentlyReading ? <BooksList booksId={shelf?.currentlyReading}/> : ''}
             </section>
-            <section>
+            <section className="mt-4">
                 <h3>Want to read</h3>
                 {shelf?.wantToRead ? <BooksList booksId={shelf?.wantToRead}/> : ''}
             </section>
-            <section>
+            <section className="mt-4">
                 <h3>Read</h3>
                 {shelf?.read ? <BooksList booksId={shelf?.read}/> : ''}
             </section>
