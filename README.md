@@ -6,6 +6,10 @@ The aim of the master thesis was coparative three front-end technologies: React,
 
 The version of React app that was compared is in the master-thesis-reactjs branch. The application has been developed and improved in the main branch.
 
+## Demo
+
+https://github.com/klaudiak98/bookshelf/assets/54007576/a313ec9f-28a0-4728-9520-b742db7deab0
+
 ## Run server
 
     $ npm install
